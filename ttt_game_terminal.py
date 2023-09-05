@@ -37,14 +37,17 @@ def next_move(row: int, col: int, move_value: str) -> None:
     mas[row][col] = move_value
 
 
-def next_move_computer(comp_val: str) -> None:    # TODO сделать Выход из рекурсии
+def next_move_computer(comp_val: str, occupied_fields: int) -> None:
     """ Функция генерирует следующий ход для компьютера """
     row = randint(1, 3)
     col = randint(1, 3)
-    if mas[row][col] == '_':
+    if occupied_fields == 9:
+        return None
+    elif mas[row][col] == '_':
         mas[row][col] = comp_val 
+    
     else:
-        next_move_computer(comp_val)
+        next_move_computer(comp_val, occupied_fields)
 
 
 abc_list = ['a', 'b', 'c']
@@ -60,6 +63,7 @@ while True:
         user_val = values['user_val']
         comp_val = values['comp_val']
         rand_move = randint(1, 2)
+        occupied_fields = 0
         if rand_move == 1:
             print("Первым начинает Противник!")
         else:
@@ -80,12 +84,13 @@ while True:
                 move = input(f'Это поле занято! Введите другие координаты: ')  # TODO Создать продолжение у этой ветки событий
             else:
                 next_move(coor_1, coor_2, user_val)
-                
-    
+                occupied_fields += 1
+
             for i in mas:
                 print(' ' * 10, *i)
         else:
-            next_move_computer(comp_val)
+            next_move_computer(comp_val, occupied_fields)
+            occupied_fields += 1
             print('Ход противника: ')
             for i in mas:
                 print(' ' * 10, *i)
