@@ -1,4 +1,4 @@
-from random import randint, random
+import random
 
 
 def new_field() -> list[list]:
@@ -29,7 +29,7 @@ def moves_values() -> dict:
     """ Функция генерирует значение хода для пользователя и компьютера"""
     move_value = ['X', 'O']
     val_dict = {}
-    val_dict['user_val'] = move_value[randint(0, 1)]
+    val_dict['user_val'] = move_value[random.randint(0, 1)]
     if val_dict['user_val'] == 'X':
         val_dict['comp_val'] = 'O'
     else:
@@ -38,18 +38,18 @@ def moves_values() -> dict:
 
 
 def next_move(row: int, col: int, move_value: str, field) -> None:
-    """ Функция генерирует ход пользователя """
+    """ Функция заполняет поле значением, по указанным координатам """
     field[row][col] = move_value
 
 
 def next_move_computer(comp_val: str, occupied_fields: int, field) -> None:
     """ Функция генерирует следующий ход для компьютера """
-    row = randint(1, 3)
-    col = randint(1, 3)
+    row = random.randint(1, 3)
+    col = random.randint(1, 3)
     if occupied_fields == 9:
         return None
     elif field[row][col] == '_':
-        field[row][col] = comp_val 
+        next_move(row, col, comp_val, field)
     
     else:
         next_move_computer(comp_val, occupied_fields, field)
@@ -66,7 +66,7 @@ def main():
             values = moves_values()
             user_val = values['user_val']
             comp_val = values['comp_val']
-            rand_move = randint(1, 2)
+            rand_move = random.randint(1, 2)
             occupied_fields = 0
             if rand_move == 1:
                 print("Первым начинает Противник!")
