@@ -55,11 +55,29 @@ def next_move_computer(comp_val: str, occupied_fields: int, field) -> None:
         next_move_computer(comp_val, occupied_fields, field)
 
 
+def valid_move(move: str, abc_list: list) -> bool:
+    """ Функция проверяет валидность координатов """
+    if int(move[1]) not in range(1, 4) or move[0] not in abc_list:
+        print(f'Неправильные координаты поля - {move}')
+        return False
+    return True
+
+
+def free_field(move, abc_list:list, field) -> [bool, None]:
+    """ Функция проверяет свободно ли поле по заданным координатам """
+    if valid_move(move, abc_list):
+        row = int(move[1])
+        col = abc_list.index(move[0]) + 1
+        if field[row][col] == '_':
+            return True
+        else:
+            print(f'Это поле занято! Введите другие координаты')
+
+
 def main():
     abc_list = ['a', 'b', 'c']
     new_game = True
     while True:
-
         if new_game:
             field = new_field()
             start_game(field)
@@ -74,22 +92,19 @@ def main():
                 print("Первый ход за Вами!")
             new_game = False
 
-        else:
-            
+        else:            
             if rand_move % 2 == 0:
-                move = input(f"Ваш ход! Вы играете '{user_val}' Введите координаты клетки(Пример: b1): ")
-                coor_1 = int(move[1])
-                coor_2 = abc_list.index(move[0]) + 1
+                while True:
+                    move = input(f"Ваш ход! Вы играете '{user_val}' Введите координаты поля(Пример: b1): ")
+                    if not free_field(move, abc_list, field=field):
+                        continue
 
-                if coor_1 not in range(1, 4) or move[0] not in abc_list:
-                    print(f'Неправильные координаты поля - {move}')
-
-                elif field[coor_1][coor_2] != '_':
-                    move = input(f'Это поле занято! Введите другие координаты: ')  # TODO Создать продолжение у этой ветки событий
-                else:
-                    next_move(coor_1, coor_2, user_val, field)
-                    occupied_fields += 1
-
+                    if valid_move(move, abc_list=abc_list) and free_field(move, abc_list, field=field):
+                        row = int(move[1])
+                        col = abc_list.index(move[0]) + 1
+                        next_move(row, col, user_val, field)
+                        occupied_fields += 1
+                        break
                 for i in field:
                     print(' ' * 10, *i)
             else:
@@ -97,8 +112,7 @@ def main():
                 occupied_fields += 1
                 print('Ход противника: ')
                 for i in field:
-                    print(' ' * 10, *i)
-                
+                    print(' ' * 10, *i)         
             rand_move += 1
 
 
