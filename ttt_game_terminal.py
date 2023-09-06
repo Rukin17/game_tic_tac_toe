@@ -1,24 +1,29 @@
 from random import randint, random
 
 
-def new_field() -> list[list[str]]:
+def new_field() -> list[list]:
     """ Функция создает игровое поле """
-    mas = [['_'] * 4 for i in range(4)]  
-    mas[0][0] = ' '
+    abc_list = ['a', 'b', 'c']
+    field = [['_'] * 4 for i in range(4)]  
+    field[0][0] = ' '
     for row in range(1, 4):
-        mas[row][0] = row
+        field[row][0] = str(row)
 
     for col in range(1, 4):
-        mas[0][col] = abc_list[col - 1]
-    return mas
+        field[0][col] = abc_list[col - 1]
+    return field
 
 
-def start_game(mas: list[list[str]]) -> None:
+def display_board(field) -> str:
+    for i in field:
+        print(' ' * 10, *i)
+    
+
+def start_game(field) -> None:
     """ Функция начала игры """
     print("Добро пожаловать в игру 'Крестики-нолики'!")
-    for i in mas:
-        print(' ' * 10, *i)
-
+    return display_board(field)
+    
 
 def moves_values() -> dict:
     """ Функция генерирует значение хода для пользователя и компьютера"""
@@ -32,68 +37,70 @@ def moves_values() -> dict:
     return val_dict
 
 
-def next_move(row: int, col: int, move_value: str) -> None:
+def next_move(row: int, col: int, move_value: str, field) -> None:
     """ Функция генерирует ход пользователя """
-    mas[row][col] = move_value
+    field[row][col] = move_value
 
 
-def next_move_computer(comp_val: str, occupied_fields: int) -> None:
+def next_move_computer(comp_val: str, occupied_fields: int, field) -> None:
     """ Функция генерирует следующий ход для компьютера """
     row = randint(1, 3)
     col = randint(1, 3)
     if occupied_fields == 9:
         return None
-    elif mas[row][col] == '_':
-        mas[row][col] = comp_val 
+    elif field[row][col] == '_':
+        field[row][col] = comp_val 
     
     else:
-        next_move_computer(comp_val, occupied_fields)
+        next_move_computer(comp_val, occupied_fields, field)
 
 
-abc_list = ['a', 'b', 'c']
-new_game = True
+def main():
+    abc_list = ['a', 'b', 'c']
+    new_game = True
+    while True:
 
-
-while True:
-
-    if new_game:
-        mas = new_field()
-        start_game(mas)
-        values = moves_values()
-        user_val = values['user_val']
-        comp_val = values['comp_val']
-        rand_move = randint(1, 2)
-        occupied_fields = 0
-        if rand_move == 1:
-            print("Первым начинает Противник!")
-        else:
-            print("Первый ход за Вами!")
-        new_game = False
-
-    else:
-        
-        if rand_move % 2 == 0:
-            move = input(f"Ваш ход! Вы играете '{user_val}' Введите координаты клетки(Пример: b1): ")
-            coor_1 = int(move[1])
-            coor_2 = abc_list.index(move[0]) + 1
-
-            if coor_1 not in range(1, 4) or move[0] not in abc_list:
-                print(f'Неправильные координаты поля - {move}')
-
-            elif mas[coor_1][coor_2] != '_':
-                move = input(f'Это поле занято! Введите другие координаты: ')  # TODO Создать продолжение у этой ветки событий
+        if new_game:
+            field = new_field()
+            start_game(field)
+            values = moves_values()
+            user_val = values['user_val']
+            comp_val = values['comp_val']
+            rand_move = randint(1, 2)
+            occupied_fields = 0
+            if rand_move == 1:
+                print("Первым начинает Противник!")
             else:
-                next_move(coor_1, coor_2, user_val)
-                occupied_fields += 1
+                print("Первый ход за Вами!")
+            new_game = False
 
-            for i in mas:
-                print(' ' * 10, *i)
         else:
-            next_move_computer(comp_val, occupied_fields)
-            occupied_fields += 1
-            print('Ход противника: ')
-            for i in mas:
-                print(' ' * 10, *i)
             
-        rand_move += 1
-          
+            if rand_move % 2 == 0:
+                move = input(f"Ваш ход! Вы играете '{user_val}' Введите координаты клетки(Пример: b1): ")
+                coor_1 = int(move[1])
+                coor_2 = abc_list.index(move[0]) + 1
+
+                if coor_1 not in range(1, 4) or move[0] not in abc_list:
+                    print(f'Неправильные координаты поля - {move}')
+
+                elif field[coor_1][coor_2] != '_':
+                    move = input(f'Это поле занято! Введите другие координаты: ')  # TODO Создать продолжение у этой ветки событий
+                else:
+                    next_move(coor_1, coor_2, user_val, field)
+                    occupied_fields += 1
+
+                for i in field:
+                    print(' ' * 10, *i)
+            else:
+                next_move_computer(comp_val, occupied_fields, field)
+                occupied_fields += 1
+                print('Ход противника: ')
+                for i in field:
+                    print(' ' * 10, *i)
+                
+            rand_move += 1
+
+
+if __name__ == '__main__':
+    main()
