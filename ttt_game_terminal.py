@@ -26,7 +26,7 @@ def start_game(field) -> None:
     
 
 def moves_values() -> dict:
-    """ Функция генерирует значение хода для пользователя и компьютера"""
+    """ Функция генерирует случайное значение хода для пользователя и компьютера"""
     move_value = ['X', 'O']
     val_dict = {}
     val_dict['user_val'] = move_value[random.randint(0, 1)]
@@ -91,24 +91,23 @@ def win_check(field, sign) -> [True, None]:
 def main():
     abc_list = ['a', 'b', 'c']    
     new_game = True
-    while True:
-        if new_game:
+    while True: 
+        if new_game:                        # если новая игра
             field = new_field()
             start_game(field)
             values = moves_values()
-            user_val = values['user_val']
-            comp_val = values['comp_val']
+            user_val, comp_val = values.values()
             rand_move = random.randint(1, 2)
-            occupied_fields = 0
+            occupied_fields = 0             # кол-во занятых полей
             if rand_move == 1:
                 print("Первым начинает Противник!")
             else:
                 print("Первый ход за Вами!")
             new_game = False
 
-        else:            
-            if rand_move % 2 == 0:
-                while True:
+        else:                               # иначе игра продолжается
+            if rand_move % 2 == 0:          # если ходит пользователь
+                while True:                 # в цикле просим ввести пользователя валидные координаты свободного поля
                     move = input(f"Ваш ход! Вы играете '{user_val}' Введите координаты поля(Пример: b1): ")
                     if not free_field(move, abc_list, field=field):
                         continue
@@ -126,7 +125,7 @@ def main():
                             print("Вы победили!!!", '\n' * 3)
                             new_game = True
                             continue
-            else:
+            else:                           # иначе ход компьютерf
                 next_move_computer(comp_val, occupied_fields, field)
                 occupied_fields += 1
                 print('Ход противника: ')
