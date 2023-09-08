@@ -122,9 +122,9 @@ def main():
                 for i in field:
                     print(' ' * 10, *i)
                 if win_check(field, user_val):
-                            print("Вы победили!!!", '\n' * 3)
-                            new_game = True
-                            continue
+                    print("Вы победили!!!", '\n' * 3)
+                    new_game = True
+                    continue
             else:                           # иначе ход компьютерf
                 next_move_computer(comp_val, occupied_fields, field)
                 occupied_fields += 1
@@ -132,9 +132,9 @@ def main():
                 for i in field:
                     print(' ' * 10, *i)
                 if win_check(field, comp_val):
-                            print("Компьютер победил!!!", '\n' * 3)
-                            new_game = True 
-                            continue        
+                    print("Компьютер победил!!!", '\n' * 3)
+                    new_game = True 
+                    continue        
             rand_move += 1
             if occupied_fields == 9:
                 print('Ничья!!!!!', '\n' * 3)
