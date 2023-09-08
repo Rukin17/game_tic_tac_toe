@@ -72,10 +72,24 @@ def free_field(move, abc_list:list, field) -> [bool, None]:
             return True
         else:
             print(f'Это поле занято! Введите другие координаты')
+            return False
 
+
+def win_check(field, sign) -> [True, None]:
+    """ Функция проверяет наличие победного результата"""
+    for row in field:
+        if row[1] == row[2] == row[3] == sign:
+            return True
+    for col in range(1, 4):
+        if field[1][col] == field[2][col] ==  field[3][col] == sign:
+            return True
+    if field[1][1] == field[2][2] == field[3][3] == sign:
+        return True
+    elif field[3][1] == field[2][2] == field[1][3] == sign: 
+        return True
 
 def main():
-    abc_list = ['a', 'b', 'c']
+    abc_list = ['a', 'b', 'c']    
     new_game = True
     while True:
         if new_game:
@@ -98,23 +112,35 @@ def main():
                     move = input(f"Ваш ход! Вы играете '{user_val}' Введите координаты поля(Пример: b1): ")
                     if not free_field(move, abc_list, field=field):
                         continue
-
-                    if valid_move(move, abc_list=abc_list) and free_field(move, abc_list, field=field):
+                    else:
                         row = int(move[1])
                         col = abc_list.index(move[0]) + 1
                         next_move(row, col, user_val, field)
                         occupied_fields += 1
+                        
                         break
+                
                 for i in field:
                     print(' ' * 10, *i)
+                if win_check(field, user_val):
+                            print("Вы победили!!!", '\n' * 3)
+                            new_game = True
+                            continue
             else:
                 next_move_computer(comp_val, occupied_fields, field)
                 occupied_fields += 1
                 print('Ход противника: ')
                 for i in field:
-                    print(' ' * 10, *i)         
+                    print(' ' * 10, *i)
+                if win_check(field, comp_val):
+                            print("Компьютер победил!!!", '\n' * 3)
+                            new_game = True 
+                            continue        
             rand_move += 1
-
+            if occupied_fields == 9:
+                print('Ничья!!!!!', '\n' * 3)
+                new_game = True
+        
 
 if __name__ == '__main__':
     main()
